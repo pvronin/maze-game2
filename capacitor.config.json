@@ -1,0 +1,9 @@
+{
+  "appId": "com.hollowlabyrinth.game",
+  "appName": "The Hollow Labyrinth",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  }
+}

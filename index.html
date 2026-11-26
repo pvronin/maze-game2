@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>The Hollow Labyrinth — Horror Survival Maze</title>
+    <meta
+      name="description"
+      content="A procedural horror survival maze game built with pure HTML5, CSS3, and Vanilla JavaScript featuring A* enemy AI, 2-4 player LAN multiplayer, customization shop, and bilingual support."
+    />
+    <meta name="theme-color" content="#05070b" />
+    <meta property="og:title" content="The Hollow Labyrinth" />
+    <meta
+      property="og:description"
+      content="Survive the procedurally generated labyrinth alone or race 2–4 players to the center sanctuary."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="icon.svg" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script defer src="js/config.js"></script>
+    <script defer src="js/i18n.js"></script>
+    <script defer src="js/catalog.js"></script>
+    <script defer src="js/storage.js"></script>
+    <script defer src="js/pathfinding.js"></script>
+    <script defer src="js/traps.js"></script>
+    <script defer src="js/maze.js"></script>
+    <script defer src="js/player.js"></script>
+    <script defer src="js/enemy.js"></script>
+    <script defer src="js/net.js"></script>
+    <script defer src="js/qr.js"></script>
+    <script defer src="js/audio.js"></script>
+    <script defer src="js/renderer.js"></script>
+    <script defer src="js/ui.js"></script>
+    <script defer src="js/game.js"></script>
+    <script defer src="js/main.js"></script>
+  </head>
+  <body data-state="title">
+    <main id="game-stage" class="game-stage">
+      <canvas
+        id="game-canvas"
+        data-testid="game-canvas"
+        aria-label="Horror Survival Maze Canvas"
+      ></canvas>
+
+      <!-- TITLE SCREEN -->
+      <section id="title-screen" class="overlay-screen title-screen" aria-label="Main Menu">
+        <div class="title-top-bar">
+          <div class="profile-strip">
+            <div class="stat-box">
+              <span class="stat-box-label" data-i18n="shards">Soul Shards</span>
+              <strong id="title-currency" class="stat-box-val">50000</strong>
+            </div>
+            <div class="stat-box">
+              <span class="stat-box-label" data-i18n="level">Level</span>
+              <strong id="title-level" class="stat-box-val">1</strong>
+            </div>
+          </div>
+          <div class="top-utility-btns">
+            <button type="button" id="btn-install-app" class="btn-toggle" hidden data-i18n="installApp">
+              Install App
+            </button>
+            <button type="button" id="btn-lang-toggle" class="btn-toggle" aria-label="Switch Language">
+              EN / فارسی
+            </button>
+          </div>
+        </div>
+
+        <div class="title-panel">
+          <div id="title-emblem" class="title-emblem" aria-hidden="true">
+            <svg viewBox="0 0 64 64" width="52" height="52">
+              <rect x="6" y="6" width="52" height="52" rx="4" fill="none" stroke="#94a3b8" stroke-width="1.5" opacity="0.45" />
+              <path d="M16 16h32v32H24V24h16v16h-8" fill="none" stroke="#d97706" stroke-width="2.4" stroke-linecap="square" />
+              <circle cx="32" cy="32" r="4" fill="#ef4444" />
+            </svg>
+          </div>
+
+          <h1 class="game-title" data-i18n="appTitle">The Hollow Labyrinth</h1>
+          <p class="game-tagline" data-i18n="appTagline">
+            Navigate shifting subterranean corridors, uncover sealed keys, outsmart deadly traps, and evade the horrors before the vault seals forever.
+          </p>
+
+          <div class="menu-section">
+            <span class="section-label" data-i18n="difficulty">Difficulty</span>
+            <div class="difficulty-group" role="group" aria-label="Select Difficulty">
+              <button type="button" class="diff-btn" data-difficulty="easy" aria-pressed="false" data-i18n="easy">
+                Easy
+              </button>
+              <button type="button" class="diff-btn is-active" data-difficulty="normal" aria-pressed="true" data-i18n="normal">
+                Normal
+              </button>
+              <button type="button" class="diff-btn" data-difficulty="hard" aria-pressed="false" data-i18n="hard">
+                Hard
+              </button>
+            </div>
+            <p id="diff-summary" class="diff-summary">21×17 Maze · 3 Keys · 04:30 Limit</p>
+            <p id="best-run-banner" class="best-run-banner">No recorded escapes on Normal yet</p>
+          </div>
+
+          <div class="menu-actions">
+            <button type="button" id="btn-start" class="btn-primary" data-start="true" data-i18n="startGame">
+              Start Game
+            </button>
+            <button type="button" id="btn-multiplayer" class="btn-accent" data-i18n="multiplayer">
+              Multiplayer (2–4P)
+            </button>
+            <button type="button" id="btn-shop" class="btn-secondary" data-i18n="shop">
+              Shop &amp; Loadout
+            </button>
+            <button type="button" id="btn-missions" class="btn-secondary" data-i18n="missions">
+              Missions &amp; Trophies
+            </button>
+            <button type="button" id="btn-howto" class="btn-secondary" data-i18n="howToPlay">
+              How to Play
+            </button>
+          </div>
+
+          <div class="audio-mix-panel">
+            <div class="audio-mix-row">
+              <button type="button" id="title-sfx-toggle" class="btn-toggle" aria-pressed="true">
+                SFX: On
+              </button>
+              <input id="title-sfx-vol" type="range" min="0" max="100" value="65" aria-label="SFX Volume" />
+            </div>
+            <div class="audio-mix-row">
+              <button type="button" id="title-music-toggle" class="btn-toggle" aria-pressed="true">
+                Music: On
+              </button>
+              <input id="title-music-vol" type="range" min="0" max="100" value="55" aria-label="Music Volume" />
+            </div>
+          </div>
+        </div>
+
+        <p class="control-hint-bar" data-i18n="hintBar">
+          WASD / Arrows Move · Shift Sprint · C Crouch · Q Smoke · V Skill · F Flashlight · E Interact / Hide · P Pause
+        </p>
+      </section>
+
+      <!-- SHOP & LOADOUT MODAL -->
+      <section id="shop-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="shop-heading" hidden>
+        <div class="modal-card modal-xl">
+          <div class="modal-head">
+            <div>
+              <h2 id="shop-heading" class="modal-title-sm" data-i18n="shopTitle">Armory &amp; Customization</h2>
+            </div>
+            <div class="modal-head-right">
+              <div class="stat-box">
+                <span class="stat-box-label" data-i18n="shards">Soul Shards</span>
+                <strong id="shop-currency" class="stat-box-val">50000</strong>
+              </div>
+              <button type="button" id="btn-close-shop" class="btn-secondary" data-i18n="close">Close</button>
+            </div>
+          </div>
+
+          <div class="tab-bar" role="tablist">
+            <button type="button" class="tab-btn is-active" data-shop-tab="skins" data-i18n="tabSkins">Skins</button>
+            <button type="button" class="tab-btn" data-shop-tab="flashlights" data-i18n="tabFlashlights">Flashlights</button>
+            <button type="button" class="tab-btn" data-shop-tab="gear" data-i18n="tabGear">Gear</button>
+            <button type="button" class="tab-btn" data-shop-tab="maps" data-i18n="tabMaps">Maps</button>
+            <button type="button" class="tab-btn" data-shop-tab="enemies" data-i18n="tabEnemies">Creatures</button>
+          </div>
+
+          <div class="shop-body">
+            <div id="shop-items-grid" class="shop-grid"></div>
+            <aside id="shop-inspector" class="shop-inspector">
+              <div class="inspector-head">
+                <canvas
+                  id="insp-preview"
+                  class="insp-preview-canvas"
+                  width="132"
+                  height="96"
+                  aria-label="Item Visual Preview"
+                ></canvas>
+                <div>
+                  <h3 id="insp-name" class="insp-name">Vault Explorer</h3>
+                  <p id="insp-desc" class="insp-desc"></p>
+                </div>
+              </div>
+              <div id="insp-skill-box" class="insp-skill-box" hidden>
+                <div class="insp-skill-head">
+                  <span id="insp-skill-title" class="section-label" data-i18n="shopSkillTitle">Character Skill</span>
+                  <span id="insp-skill-badge" class="insp-skill-badge">ACTIVE [V]</span>
+                </div>
+                <strong id="insp-skill-name" class="insp-skill-name"></strong>
+                <p id="insp-skill-desc" class="insp-skill-desc"></p>
+              </div>
+              <span class="section-label" data-i18n="selectedStats">Item Attributes (0–100)</span>
+              <div id="insp-stats" class="attr-bars"></div>
+              <button type="button" id="insp-action-btn" class="btn-primary">Equipped</button>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- MISSIONS & ACHIEVEMENTS MODAL -->
+      <section id="missions-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="missions-heading" hidden>
+        <div class="modal-card modal-wide">
+          <div class="modal-head">
+            <h2 id="missions-heading" class="modal-title-sm" data-i18n="missionsTitle">Missions &amp; Trophies</h2>
+            <button type="button" id="btn-close-missions" class="btn-secondary" data-i18n="close">Close</button>
+          </div>
+          <div class="tab-bar" role="tablist">
+            <button type="button" class="tab-btn is-active" data-mission-tab="missions" data-i18n="tabMissions">Active Missions</button>
+            <button type="button" class="tab-btn" data-mission-tab="achievements" data-i18n="tabAchievements">Achievements</button>
+          </div>
+          <div id="missions-list" class="missions-list"></div>
+        </div>
+      </section>
+
+      <!-- MULTIPLAYER LOBBY MODAL -->
+      <section id="mp-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="mp-heading" hidden>
+        <div class="modal-card modal-wide">
+          <div class="modal-head">
+            <h2 id="mp-heading" class="modal-title-sm" data-i18n="mpTitle">LAN &amp; Shared Multiplayer (2–4 Players)</h2>
+            <button type="button" id="btn-close-mp" class="btn-secondary" data-i18n="close">Close</button>
+          </div>
+
+          <div id="mp-setup-view">
+            <div class="mp-name-row">
+              <label for="mp-player-name" class="section-label" data-i18n="mpPlayerName">Your Name</label>
+              <input id="mp-player-name" type="text" maxlength="16" class="text-input" value="Survivor" />
+            </div>
+
+            <div class="tab-bar" role="tablist">
+              <button type="button" class="tab-btn is-active" data-mp-tab="host" data-i18n="mpHostTab">Host Match</button>
+              <button type="button" class="tab-btn" data-mp-tab="join" data-i18n="mpJoinTab">Join Match</button>
+            </div>
+
+            <div id="mp-host-panel" class="mp-panel">
+              <div class="mp-field">
+                <span class="section-label" data-i18n="mpPlayerCount">Number of Players</span>
+                <div class="difficulty-group">
+                  <button type="button" class="diff-btn is-active" data-mp-count="2">2</button>
+                  <button type="button" class="diff-btn" data-mp-count="3">3</button>
+                  <button type="button" class="diff-btn" data-mp-count="4">4</button>
+                </div>
+              </div>
+              <div class="mp-field">
+                <label for="mp-map-select" class="section-label" data-i18n="mpMapSelect">Maze Map</label>
+                <select id="mp-map-select" class="text-input"></select>
+              </div>
+              <label class="checkbox-row">
+                <input type="checkbox" id="mp-enemy-toggle" checked />
+                <span data-i18n="mpEnemyToggle">Roam Hazard Creature</span>
+              </label>
+              <button type="button" id="btn-mp-create" class="btn-primary" data-i18n="mpCreateRoom">Create Room</button>
+            </div>
+
+            <div id="mp-join-panel" class="mp-panel" hidden>
+              <div class="mp-open-rooms-head">
+                <span class="section-label" data-i18n="mpOpenRooms">Open Rooms Nearby (1-Click Join)</span>
+                <button type="button" id="btn-mp-refresh-rooms" class="btn-toggle" data-i18n="mpRefresh">Refresh</button>
+              </div>
+              <div id="mp-open-rooms" class="mp-open-rooms"></div>
+
+              <div class="mp-field">
+                <label for="mp-room-code-input" class="section-label" data-i18n="mpRoomCode">Room Code</label>
+                <input id="mp-room-code-input" type="text" maxlength="6" class="text-input code-input" placeholder="ABCD" />
+              </div>
+              <div class="mp-field">
+                <label for="mp-server-url-input" class="section-label" data-i18n="mpServerUrl">Host Address (auto-detected on web)</label>
+                <input id="mp-server-url-input" type="text" class="text-input" placeholder="Optional: 192.168.1.10:3000" />
+              </div>
+              <button type="button" id="btn-mp-join" class="btn-primary" data-i18n="mpJoinRoom">Join Room</button>
+            </div>
+          </div>
+
+          <div id="mp-room-view" hidden>
+            <div class="room-banner">
+              <div>
+                <span class="section-label" data-i18n="mpRoomCode">Room Code</span>
+                <div id="mp-active-code" class="room-code-display">----</div>
+              </div>
+              <div id="mp-waiting-label" class="waiting-label">Waiting for Players (1/2)</div>
+            </div>
+            <div class="mp-share-grid">
+              <div class="mp-share-left">
+                <p class="mp-share-hint" data-i18n="mpShareHint">Send this 1-click invite link or scan the QR code on another phone:</p>
+                <div id="mp-lan-urls" class="lan-url-box"></div>
+                <button type="button" id="btn-mp-copy-link" class="btn-secondary" data-i18n="mpCopyLink">Copy Invite Link</button>
+              </div>
+              <div class="mp-qr-box">
+                <canvas id="mp-qr-canvas" width="144" height="144" aria-label="Room Invite QR Code"></canvas>
+                <span class="mp-qr-caption" data-i18n="mpScanQr">Scan QR with phone</span>
+              </div>
+            </div>
+            <div id="mp-roster" class="mp-roster"></div>
+            <div class="modal-actions">
+              <button type="button" id="btn-mp-start" class="btn-primary" disabled data-i18n="mpStartMatch">Start Match</button>
+              <button type="button" id="btn-mp-leave" class="btn-secondary" data-i18n="mpLeaveRoom">Leave Room</button>
+            </div>
+          </div>
+
+          <p id="mp-error-msg" class="mp-error" hidden></p>
+        </div>
+      </section>
+
+      <!-- HOW TO PLAY MODAL -->
+      <section
+        id="howto-modal"
+        class="modal-backdrop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="howto-heading"
+        hidden
+      >
+        <div class="modal-card modal-wide">
+          <h2 id="howto-heading" class="modal-title-sm" data-i18n="howtoTitle">Survival Guide &amp; Controls</h2>
+          <div class="howto-grid">
+            <div class="howto-col">
+              <h3>Objectives &amp; Boss Fight</h3>
+              <ul>
+                <li><strong>4-Stage Labyrinth &amp; Boss:</strong> Survive 4 escalating stages. On Stage 4, confront <strong>The Abyssal Warden</strong> who telegraphs lethal shockwave slams and Shadow Surges.</li>
+                <li><strong>Character Skills [V]:</strong> Every skin grants a unique Active (<strong>[V]</strong>) or Automatic Passive power—full-map scan, 20s stun strike, sprint overdrive, auto-cloak, or toxic immunity.</li>
+                <li><strong>Environmental Hazards:</strong> Higher stages trigger temporary <strong>Lab Power Outages</strong> and <strong>Toxic Gas Leaks</strong>.</li>
+              </ul>
+              <h3>Hazards &amp; Stealth</h3>
+              <ul>
+                <li><strong>Non-Fatal Hits &amp; Smoke Bombs:</strong> Creature strikes deal damage instead of instant loss; drop a <strong>Smoke Bomb [Q]</strong> to blind hunters in its cloud.</li>
+                <li><strong>Slow Crouch &amp; Alcoves:</strong> Toggle <strong>C</strong> for slow, quiet stealth, or press <strong>E</strong> in alcoves to hide or disarm traps.</li>
+              </ul>
+            </div>
+            <div class="howto-col">
+              <h3>Controls</h3>
+              <dl class="controls-list">
+                <div><dt>WASD / Arrows</dt><dd>Move through corridors</dd></div>
+                <div><dt>Shift</dt><dd>Sprint (drains stamina)</dd></div>
+                <div><dt>C</dt><dd>Toggle Slow Crouch / Sneak</dd></div>
+                <div><dt>Q</dt><dd>Deploy Smoke Bomb</dd></div>
+                <div><dt>V</dt><dd>Activate Character Skill</dd></div>
+                <div><dt>Mouse Cursor</dt><dd>Aim flashlight beam</dd></div>
+                <div><dt>F</dt><dd>Toggle flashlight</dd></div>
+                <div><dt>E</dt><dd>Hide, Disarm trap, or Unlock gate</dd></div>
+                <div><dt>Tab</dt><dd>Toggle explored minimap</dd></div>
+                <div><dt>P / Esc</dt><dd>Pause game</dd></div>
+                <div><dt>M / R</dt><dd>Mute SFX / Quick Restart</dd></div>
+              </dl>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="btn-close-howto" class="btn-primary" data-i18n="backToMenu">Back to Menu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- IN-GAME HUD -->
+      <section id="game-hud" class="game-hud" aria-label="Game Heads-Up Display" hidden>
+        <div class="hud-cluster hud-top-left">
+          <div class="vital-row">
+            <div class="vital-header">
+              <span class="hud-kicker" data-i18n="health">HEALTH</span>
+              <span id="hud-hp-text" class="hud-value">100/100 · STABLE</span>
+            </div>
+            <div class="meter-track">
+              <div id="hud-hp-ghost" class="meter-ghost"></div>
+              <div id="hud-hp-fill" class="meter-fill meter-hp" data-status="stable"></div>
+            </div>
+          </div>
+
+          <div class="vital-row">
+            <div class="vital-header">
+              <span class="hud-kicker" data-i18n="stamina">STAMINA</span>
+              <span class="hud-sub">[Shift]</span>
+            </div>
+            <div class="meter-track meter-thin">
+              <div id="hud-stamina-fill" class="meter-fill meter-stamina"></div>
+            </div>
+          </div>
+
+          <div class="vital-row">
+            <div class="vital-header">
+              <span class="hud-kicker" data-i18n="flashlight">FLASHLIGHT [F]</span>
+              <span id="hud-flashlight-state" class="hud-value">100% · ON</span>
+            </div>
+            <div class="meter-track meter-thin">
+              <div id="hud-battery-fill" class="meter-fill meter-battery"></div>
+            </div>
+          </div>
+
+          <div class="hud-tactical-row">
+            <span id="hud-smoke-chip" class="hud-tactical-chip">SMOKE [Q] ×2</span>
+            <span id="hud-crouch-chip" class="hud-tactical-chip">STAND [C]</span>
+          </div>
+          <div class="hud-tactical-row">
+            <button type="button" id="hud-btn-skill" class="hud-tactical-chip hud-skill-btn is-ready" tabindex="-1">SKILL [V]: READY</button>
+          </div>
+        </div>
+
+        <div class="hud-cluster hud-top-center">
+          <div id="hud-stage-badge" class="hud-stage-badge">STAGE 1/4</div>
+          <div id="hud-timer" class="hud-timer">03:30</div>
+          <div id="hud-objective" class="hud-objective">Find the Brass Key (0/3 Keys)</div>
+          <div id="hud-boss-bar" class="hud-boss-bar" hidden>
+            <span id="hud-boss-name" class="hud-boss-name">ABYSSAL WARDEN</span>
+            <span id="hud-boss-status" class="hud-boss-status">HUNTING</span>
+          </div>
+          <div id="hud-threat-banner" class="hud-threat" hidden>CREATURE HUNTING</div>
+        </div>
+
+        <div class="hud-cluster hud-top-right">
+          <div id="hud-keys-list" class="keys-list" aria-label="Collected Keys"></div>
+          <div id="hud-mp-standings" class="mp-standings" hidden></div>
+          <div class="hud-icon-bar">
+            <button type="button" id="hud-btn-sfx" class="icon-btn" tabindex="-1" title="Toggle SFX [M]" aria-label="Toggle Sound Effects" aria-pressed="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M11 5L6 9H2v6h4l5 4V5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </button>
+            <button type="button" id="hud-btn-music" class="icon-btn" tabindex="-1" title="Toggle Music" aria-label="Toggle Background Music" aria-pressed="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M9 18V5l12-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="6" cy="18" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+                <circle cx="18" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </button>
+            <button type="button" id="hud-btn-map" class="icon-btn" tabindex="-1" title="Toggle Minimap [Tab]" aria-label="Toggle Minimap" aria-pressed="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                <path d="M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.6" />
+              </svg>
+            </button>
+            <button type="button" id="hud-btn-restart" class="icon-btn" tabindex="-1" title="Restart [R]" aria-label="Restart Maze">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 3-6.7L3 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M3 3v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button type="button" id="hud-btn-pause" class="icon-btn" tabindex="-1" title="Pause [P]" aria-label="Pause Game">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <rect x="6" y="5" width="4" height="14" fill="currentColor" />
+                <rect x="14" y="5" width="4" height="14" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="hud-bottom-center">
+          <div id="hud-event-toast" class="hud-toast" hidden></div>
+          <div id="hud-interact-prompt" class="hud-interact" hidden></div>
+        </div>
+
+        <div class="hud-touch-controls" aria-label="Touch Controls">
+          <div class="touch-dpad">
+            <button type="button" class="touch-btn touch-up" data-touch-dir="up" aria-label="Move Up">▲</button>
+            <button type="button" class="touch-btn touch-left" data-touch-dir="left" aria-label="Move Left">◀</button>
+            <button type="button" class="touch-btn touch-right" data-touch-dir="right" aria-label="Move Right">▶</button>
+            <button type="button" class="touch-btn touch-down" data-touch-dir="down" aria-label="Move Down">▼</button>
+          </div>
+          <div class="touch-actions">
+            <button type="button" id="touch-skill" class="touch-action-btn" data-i18n="touchSkill">Skill [V]</button>
+            <button type="button" id="touch-smoke" class="touch-action-btn" data-i18n="touchSmoke">Smoke [Q]</button>
+            <button type="button" id="touch-crouch" class="touch-action-btn" data-i18n="touchCrouch">Crouch [C]</button>
+            <button type="button" id="touch-sprint" class="touch-action-btn">Sprint</button>
+            <button type="button" id="touch-light" class="touch-action-btn">Light</button>
+            <button type="button" id="touch-interact" class="touch-action-btn">Act [E]</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAUSE MODAL -->
+      <section id="pause-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="pause-heading" hidden>
+        <div class="modal-card">
+          <span class="modal-kicker" data-i18n="paused">PAUSED</span>
+          <h2 id="pause-heading" class="modal-title" data-i18n="labyrinthSuspended">Labyrinth Suspended</h2>
+          <div class="audio-mix-panel">
+            <div class="audio-mix-row">
+              <button type="button" id="pause-sfx-toggle" class="btn-toggle" aria-pressed="true">SFX: On</button>
+              <input id="pause-sfx-vol" type="range" min="0" max="100" value="65" aria-label="SFX Volume" />
+            </div>
+            <div class="audio-mix-row">
+              <button type="button" id="pause-music-toggle" class="btn-toggle" aria-pressed="true">Music: On</button>
+              <input id="pause-music-vol" type="range" min="0" max="100" value="55" aria-label="Music Volume" />
+            </div>
+          </div>
+          <div class="modal-actions modal-stack">
+            <button type="button" id="btn-resume" class="btn-primary" data-i18n="resume">Resume</button>
+            <button type="button" id="btn-pause-restart" class="btn-secondary" data-i18n="restartMaze">Restart Maze</button>
+            <button type="button" id="btn-pause-title" class="btn-secondary" data-i18n="mainMenu">Main Menu</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAME OVER / VICTORY / MP RESULTS MODAL -->
+      <section id="gameover-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="go-title" hidden>
+        <div class="modal-card modal-results" data-outcome="defeat">
+          <span id="go-badge" class="modal-kicker">SIGNAL LOST</span>
+          <h2 id="go-title" class="modal-title">You Perished</h2>
+          <p id="go-reason" class="modal-reason">Caught by the Stalker in the dark</p>
+
+          <div id="go-grade-row" class="grade-row">
+            <div id="go-grade-letter" class="grade-badge">S</div>
+            <div id="go-stars" class="stars-row" aria-label="Rating Stars">★★★★★</div>
+          </div>
+
+          <div class="stats-grid stats-grid-4">
+            <div class="stat-cell">
+              <span class="stat-label" data-i18n="statTime">Time</span>
+              <span id="go-stat-time" class="stat-value">00:00</span>
+            </div>
+            <div class="stat-cell">
+              <span class="stat-label" data-i18n="statKeys">Keys</span>
+              <span id="go-stat-keys" class="stat-value">0/3</span>
+            </div>
+            <div class="stat-cell">
+              <span class="stat-label" data-i18n="statScore">Score</span>
+              <span id="go-stat-score" class="stat-value">0</span>
+            </div>
+            <div class="stat-cell">
+              <span class="stat-label" data-i18n="statShards">Shards Earned</span>
+              <span id="go-stat-shards" class="stat-value stat-shards">+0</span>
+            </div>
+          </div>
+
+          <div id="go-breakdown" class="breakdown-box"></div>
+          <div id="go-mp-rankings" class="mp-rankings-box" hidden></div>
+
+          <p id="go-best-note" class="best-run-banner" hidden></p>
+
+          <div class="modal-actions modal-stack">
+            <button type="button" id="btn-play-again" class="btn-primary" data-start="true" data-i18n="playAgain">
+              Play Again
+            </button>
+            <button type="button" id="btn-mp-lobby-return" class="btn-primary" hidden data-i18n="mpReturnLobby">
+              Back to Lobby
+            </button>
+            <button type="button" id="btn-go-title" class="btn-secondary" data-i18n="mainMenu">Main Menu</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

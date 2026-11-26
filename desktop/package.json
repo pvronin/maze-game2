@@ -1,0 +1,22 @@
+{
+  "name": "the-hollow-labyrinth-desktop",
+  "version": "2.0.0",
+  "description": "Windows Desktop Launcher for The Hollow Labyrinth",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "build": {
+    "appId": "com.hollowlabyrinth.game",
+    "productName": "The Hollow Labyrinth",
+    "files": ["main.js", "../dist/**/*"],
+    "win": {
+      "target": ["nsis", "portable"]
+    }
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8"
+  }
+}

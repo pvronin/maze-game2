@@ -1,0 +1,6 @@
+{
+  "name": "The Hollow Labyrinth",
+  "description": "A procedural horror survival maze game built with pure HTML5, CSS3, and Vanilla JavaScript featuring A* enemy AI, raycasted flashlight fog-of-war, deadly traps, keys, and locked gates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

@@ -1,0 +1,600 @@
+# Game Development Brief: Horror Survival Maze
+
+Act as a senior web game developer, game designer, and JavaScript engineer. I want you to upgrade my existing browser-based maze game into a more immersive and challenging **Horror Survival Maze** game.
+
+The game must be developed using pure **HTML5, CSS3, and Vanilla JavaScript**. Do not use React, TypeScript, game engines, external frameworks, or unnecessary third-party libraries.
+
+## 1. Core Gameplay
+
+The player is trapped inside a randomly generated maze and must find keys, unlock locked doors, avoid deadly traps, escape from a hostile creature, and reach the exit before the countdown timer reaches zero.
+
+The game should combine maze exploration, survival horror, puzzle-solving, and time-based challenges.
+
+## 2. Enemy AI and Chase System
+
+Introduce an intelligent enemy creature that actively hunts the player throughout the maze.
+
+Enemy behavior must include:
+
+- The enemy should move independently through the maze and actively search for the player.
+- Implement pathfinding using an algorithm such as A* or BFS so the enemy can navigate corridors and intersections intelligently.
+- The enemy should be able to detect the player based on proximity and, ideally, line of sight.
+- When the enemy detects the player, it should switch to an aggressive chase mode.
+- When the player escapes its detection range, the enemy should return to searching or patrolling.
+- The enemy must not pass through walls, locked doors, or inaccessible areas.
+- Enemy movement speed and intelligence should increase with difficulty.
+- If the enemy catches the player, trigger a scary game-over event with a visual effect and a clear restart option.
+
+The enemy must feel dangerous and unpredictable, not like a simple object randomly moving around.
+
+## 3. Deadly Traps and Dangerous Choices
+
+Add dangerous traps throughout the maze to make exploration more strategic.
+
+Include different types of traps:
+
+- **Hidden Pits:** Some corridors or intersections contain concealed floor traps. If the player chooses the wrong path, they may fall into a pit and die or lose a significant amount of health.
+- **Spike Traps:** Stepping on certain floor tiles triggers spikes and causes damage or instant death, depending on the difficulty.
+- **Pressure Plates:** Some tiles activate traps when the player walks over them.
+- **False Paths:** Certain paths look safe but lead to dead ends, dangerous areas, or traps.
+- **Collapsing Floors:** Some floor sections collapse after the player steps on them, blocking the return route.
+
+Trap mechanics:
+
+- Traps should be randomly distributed but logically placed.
+- Some traps should be visible, while others should be hidden.
+- Add subtle visual or audio clues that allow careful players to identify certain traps.
+- The player should be able to disarm or avoid some traps using specific mechanics.
+- Trap placement must never make the level impossible to complete.
+
+## 4. Keys, Locked Doors, and Progression
+
+Keep and improve the original key-and-door mechanics.
+
+- Generate keys in different locations throughout the maze.
+- Require specific keys to unlock corresponding doors.
+- Some keys may be hidden in dangerous areas or near the enemy.
+- Display collected keys in the HUD.
+- Add visual and sound feedback when collecting keys or unlocking doors.
+- Make sure the player cannot reach the exit without completing the required objectives.
+
+## 5. Procedural Maze Generation
+
+Implement procedural maze generation so every new game feels different.
+
+Requirements:
+
+- Generate a new maze layout every time a new game starts.
+- Ensure every maze is solvable.
+- Place the player, enemy, keys, doors, traps, and exit in valid locations.
+- Avoid placing the exit directly next to the starting point.
+- Ensure the player has a reasonable chance to find the necessary items before being caught.
+- Introduce more complex maze structures at higher difficulty levels.
+
+## 6. Difficulty System
+
+Create three difficulty levels:
+
+**Easy:**
+- Smaller maze.
+- Slower enemy.
+- More time.
+- Fewer traps.
+- Some traps are clearly visible.
+
+**Normal:**
+- Medium-sized maze.
+- Moderate enemy speed.
+- Balanced countdown timer.
+- A reasonable number of hidden and visible traps.
+
+**Hard:**
+- Large and complex maze.
+- Faster and more intelligent enemy.
+- Less time.
+- More dangerous traps.
+- Limited opportunities to recover from mistakes.
+
+Difficulty should affect the maze generation, enemy AI, trap density, and timer.
+
+## 7. Player Mechanics
+
+Add the following mechanics:
+
+- Smooth keyboard movement using WASD and arrow keys.
+- Optional sprint mechanic with a limited stamina bar.
+- Health system if appropriate.
+- A limited-use flashlight to reveal hidden traps or nearby areas.
+- Optional hiding spots where the player can temporarily avoid enemy detection.
+- Responsive controls and collision detection.
+- Clear visual feedback for damage, enemy proximity, and important events.
+
+Do not make every mechanic mandatory if it negatively affects gameplay balance.
+
+## 8. Atmosphere and Visual Design
+
+The game should have a dark, atmospheric horror aesthetic.
+
+Visual direction:
+
+- Dark abandoned underground facility, dungeon, or mysterious labyrinth.
+- Dim lighting and limited visibility.
+- Fog of war or a visibility radius around the player.
+- Flashlight effects and shadows.
+- Distinct visual design for the enemy, keys, doors, traps, and exit.
+- Subtle screen shake when the enemy approaches or the player takes damage.
+- Horror-themed UI with readable typography and strong visual hierarchy.
+- Smooth transitions and animations.
+
+The game should look polished and professionally designed, not like a basic programming demo.
+
+## 9. Sound Design
+
+Add optional sound effects for:
+
+- Enemy footsteps.
+- Enemy detection and chase.
+- Player footsteps.
+- Collecting keys.
+- Unlocking doors.
+- Triggering traps.
+- Falling into pits.
+- Game over and victory.
+
+Use local audio files if available, or generate simple sound effects using the Web Audio API.
+
+Include separate controls for sound effects and background music. The game must remain fully playable when audio is disabled.
+
+## 10. User Interface
+
+Create a polished interface containing:
+
+- Main menu.
+- New Game button.
+- Difficulty selection.
+- Instructions and controls.
+- Countdown timer.
+- Health and stamina indicators, if implemented.
+- Key inventory.
+- Flashlight status.
+- Pause and resume functionality.
+- Current objective indicator.
+- Game-over screen.
+- Victory screen with completion statistics.
+
+The interface must be responsive and work on different screen sizes.
+
+## 11. Technical Requirements
+
+- Use pure HTML, CSS, and Vanilla JavaScript.
+- Use HTML Canvas for rendering if it provides better performance and flexibility.
+- Organize the project into clean, modular files.
+- Separate game logic, maze generation, enemy AI, traps, player controls, rendering, and UI code.
+- Write readable, maintainable, and well-commented code.
+- Avoid unnecessary dependencies and external services.
+- The game must run locally by opening index.html in a modern browser, without requiring a server, installation, or internet connection.
+- Store settings and optional best scores locally using localStorage.
+- Optimize rendering and game updates to maintain smooth performance.
+
+## 12. Important Gameplay and Quality Requirements
+
+Pay special attention to game balance:
+
+- The enemy must not spawn directly next to the player.
+- The player must have enough time to react when the enemy detects them.
+- Traps must be dangerous but fair.
+- Procedural generation must never create unreachable keys, impossible doors, or blocked exits.
+- The player must have a realistic opportunity to win.
+- Avoid unfair random deaths.
+- Every game session should feel different and offer meaningful decisions.
+
+## 13. Deliverables
+
+Provide the complete project with a clean folder structure.
+
+Include:
+- index.html
+- CSS files
+- JavaScript files
+- Any required local assets or audio files
+- README.md with instructions for playing and customizing the game
+
+Do not provide incomplete code, pseudocode, or placeholders for essential features.
+
+Make sure all files work together correctly. Test the core gameplay logic, enemy pathfinding, collision detection, maze solvability, trap interactions, and win/lose conditions.
+
+## Final Instruction
+
+Prioritize a genuinely playable, polished survival horror game over unnecessary complexity.
+
+If I provide you with my existing game source code, inspect it first and preserve its existing working features wherever possible. Upgrade the existing project instead of unnecessarily rebuilding everything from scratch.
+
+If the original source code is not provided, create the complete game from scratch.
+
+Deliver all source files in a clearly organized structure and explain how to run the game locally.
+
+این بازیو ارتقا بده با قابلیت های جدید و 2 زبانه باشه فارسیو انگلیسی 
+بعد که ساختی برای وب.. نسخه ویندوز و اندرویدشم بساز
+
+I have already developed this game, and all of its existing features are working correctly. However, there are some structural problems that need to be fixed, and I want to add a multiplayer mode without breaking or changing the existing single-player gameplay.
+
+### 1. Maze Logic, Trap Fairness, and Guaranteed Solvability
+
+Currently, the game contains hidden pits or traps that the player cannot detect beforehand. Players can unknowingly fall into them, get stuck, and lose, making the game impossible to win in certain situations.
+
+I want you to thoroughly analyze the game's existing logic, map generation, trap placement, collision system, and movement mechanics. Perform your own logical checks and fix the underlying structural problems to ensure that the game is always solvable.
+
+Requirements:
+
+- Every trap, pit, puzzle, obstacle, or dangerous situation must have a logical and achievable escape route or solution.
+- The player must never encounter an unavoidable dead-end trap or an impossible situation that makes winning impossible.
+- Ensure that the maze generation and trap placement systems do not create unwinnable scenarios.
+- Validate the generated maze logically to ensure that a player can successfully reach the goal.
+- If a player encounters a trap or obstacle along the way, there must always be a fair and possible way to overcome it or escape from it.
+- Perform logical validation and testing on different generated maze configurations to identify and eliminate impossible scenarios.
+
+**Do not make the game easier.** I do not want simplified traps, easier puzzles, reduced difficulty, or fewer challenges. My goal is to make the game logically fair, structurally correct, and solvable while preserving its existing difficulty and gameplay experience.
+
+### 2. Add a Multiplayer Co-op Mode (2–4 Players)
+
+Add a new multiplayer mode to the existing game that allows 2 to 4 players to play together in the same shared maze.
+
+The multiplayer connection system should work as follows:
+
+- One computer acts as the host and creates a shared game session.
+- Other players connect to the host using a shared connection method, such as a LAN connection or shared hotspot.
+- All connected players join the same maze and play simultaneously.
+- The multiplayer mode must support 2-player, 3-player, and 4-player matches.
+- Each player must be able to control their own character independently.
+- Players must be synchronized within the same maze, with their positions and gameplay progress updated for the other players.
+- The host must be able to select the desired number of players (2, 3, or 4) before starting the match.
+- The session must only allow the selected number of players to join. For example, if the host selects a 2-player match, only two players in total, including the host, can participate.
+
+### 3. Multiplayer Maze Design and Race-Based Victory System
+
+The multiplayer maze should be square-shaped and slightly larger than the standard single-player maze.
+
+Gameplay requirements:
+
+- All players must start from different corners of the square maze.
+- For 2-player matches, use two appropriate starting corners.
+- For 3-player matches, use three different starting corners.
+- For 4-player matches, use all four starting corners.
+- The center of the maze must be the shared victory destination.
+- Players must race against each other to reach the center.
+- The first player to reach the center is ranked first.
+- The second player to reach the center is ranked second.
+- The third player to reach the center is ranked third.
+- In 2-player matches, determine first and second place.
+- In 3-player matches, determine first, second, and third place.
+- In 4-player matches, determine first, second, and third place, and end the round once the top three finishers have been determined.
+- The game must continue until the required finishing positions for the selected player count have been determined.
+- Once the match ends, the final rankings must be displayed.
+
+When a player finishes the game, the other players must receive an in-game notification announcing that the player has completed the maze and indicating their finishing position.
+
+For example, notify the remaining players when someone reaches the center and finishes in first place, then continue notifying them as the second and third positions are determined.
+
+The notification system must correctly handle all multiplayer configurations and display the appropriate player's name and finishing position.
+
+### 4. Multiplayer Player Count Selection
+
+The multiplayer mode must support three different game configurations: 2-player, 3-player, and 4-player matches.
+
+Before starting a multiplayer session, the host must be able to select the desired number of players (2, 3, or 4).
+
+The game must then create and configure the shared maze accordingly, ensuring that only the selected number of players can join the session.
+
+Each configuration must work correctly, including:
+
+- Player spawning positions.
+- Maze layout and size.
+- Shared maze generation.
+- Multiplayer connection and synchronization.
+- Player movement and controls.
+- Trap and obstacle logic.
+- Race-to-the-center ranking system.
+- Finishing notifications.
+- Match completion and final rankings.
+
+Do not force every multiplayer session to use four players. The host must be able to choose between 2, 3, or 4 players before the match begins.
+
+### 5. Preserve the Existing Game and Integrate Multiplayer
+
+The existing single-player game must remain intact, including its original mechanics, features, difficulty, and gameplay behavior.
+
+Do not redesign, simplify, remove, or unnecessarily modify the existing game.
+
+The multiplayer mode must be added as a separate feature and integrated into the current game structure. Multiplayer connectivity must use a host-based shared connection system, allowing multiple computers to connect to one host and participate in the same multiplayer maze.
+
+Before implementing the changes:
+
+- Inspect the entire existing codebase and understand its current structure.
+- Identify the existing game mechanics and systems that must remain unchanged.
+- Analyze the maze generation, trap logic, movement, collision detection, and win/lose conditions.
+- Identify and fix the structural issues that make the game unwinnable.
+- Design and implement the multiplayer mode in a way that integrates properly with the existing architecture.
+- Ensure the single-player mode continues to work exactly as before.
+- Test the multiplayer mode with 2, 3, and 4 players.
+- Verify that all players can connect, spawn correctly, move simultaneously, see each other, and compete to reach the center.
+- Verify that the finishing order, notifications, and match-ending conditions work correctly for each player count.
+
+Do not unnecessarily rewrite the entire project. Reuse the existing code and architecture wherever possible, and make only the necessary changes to fix the game's structural problems and add the multiplayer functionality.
+
+The final result must preserve the original single-player experience while adding a fully functional, host-based multiplayer mode for 2, 3, or 4 players, with a logically solvable maze, fair traps, synchronized players, and a competitive race to the center.
+
+for windows and web and android
+
+I want to significantly expand the game by introducing new gameplay systems, customization options, progression mechanics, unlockable content, and additional features that make the game more engaging, replayable, and rewarding.
+
+I have not fully tested the multiplayer functionality yet, so do not assume that it is already working correctly. Preserve the existing game and carefully integrate the new features into its current structure without breaking existing mechanics.
+
+### 1. Player Skins and Character Customization
+
+Add a player customization system that allows players to purchase, unlock, select, and equip different character skins.
+
+Requirements:
+- Add a dedicated skin shop.
+- Create multiple visually distinct player skins.
+- Each skin must have its own appearance and identity.
+- Skins must be purchasable using in-game currency.
+- Skins must not be available for free by default. Players must earn or spend in-game currency to unlock them, unless a specific skin is intentionally designated as an initial default skin.
+- Players must be able to preview skins before purchasing.
+- Purchased skins must remain permanently unlocked for that player.
+- Players must be able to equip and switch between their owned skins.
+- Make the skin collection expandable so new skins can be added in the future.
+
+### 2. Different Maze Maps and Map Game Modes
+
+Expand the map system by introducing different maze maps, environments, layouts, and map styles.
+
+Requirements:
+- Add multiple visually different maze environments.
+- Introduce different map themes, atmospheres, visual styles, and environmental elements.
+- Allow players to purchase and unlock maps using in-game currency.
+- Add different maze styles and gameplay variations where appropriate.
+- Each map should feel distinct rather than simply changing the colors of the same environment.
+- Maps may include different lighting conditions, environmental decorations, visual effects, maze structures, and atmosphere.
+- Preserve the core gameplay mechanics while allowing different maps to provide unique experiences.
+- Make the map system modular and expandable for future maps.
+
+### 3. Enemy Skins and Enemy Variety
+
+Expand the enemy system by introducing different enemy appearances, including multiple types of spiders and other creatures.
+
+Requirements:
+- Add multiple enemy skins and visual variations.
+- Introduce different spider designs, appearances, sizes, and characteristics.
+- Add other suitable creatures or enemy types that fit the horror atmosphere of the game.
+- Allow certain enemy types or skins to be unlocked or purchased using in-game currency.
+- Where appropriate, give different enemy types their own unique behaviors, movement patterns, characteristics, or abilities.
+- Make enemies visually distinguishable from each other.
+- Preserve the game's horror atmosphere and make encounters more immersive and unpredictable without making them unfair.
+
+### 4. Game Rating and Scoring System
+
+Add a scoring and rating system for every completed game session.
+
+Requirements:
+- Evaluate the player's performance at the end of each game.
+- Assign a score based on multiple gameplay factors.
+- Consider factors such as completion time, survival, deaths, damage taken, objectives completed, collected items, difficulty, and other relevant gameplay achievements.
+- Display the final score and performance rating on the end-game screen.
+- Provide a breakdown of how the player earned their score.
+- Use a rating system such as stars, ranks, grades, or another suitable progression scale.
+- Make the scoring system meaningful and rewarding rather than arbitrary.
+- Ensure that the scoring system can be used in both single-player and multiplayer modes where applicable.
+
+### 5. Background Music and Audio System
+
+Implement a high-quality background music system with separate music for the main menu and gameplay.
+
+Requirements:
+- Add suitable atmospheric background music for the main menu.
+- Add a separate gameplay soundtrack that enhances tension, immersion, and the horror atmosphere.
+- Gameplay music should be immersive and enjoyable to listen to without becoming distracting or overwhelming.
+- Use different music or variations where appropriate for different maps, game states, enemy encounters, or intense moments.
+- Implement smooth transitions between menu music and gameplay music.
+- Add audio settings that allow players to control music volume and sound effects volume independently.
+- Include options to mute or enable music and sound effects separately.
+- Ensure that music playback is handled efficiently and does not negatively affect performance.
+- Avoid repetitive or annoying audio loops and use appropriate audio transitions.
+
+### 6. In-Game Currency and Economy System
+
+Introduce an in-game currency system that allows players to earn money through gameplay and spend it on unlockable content.
+
+Requirements:
+- Create a persistent in-game currency system.
+- Players must be able to earn currency through different activities.
+- Winning or completing a game must reward the player with in-game currency.
+- Completing missions, challenges, objectives, and achievements must also reward currency.
+- Additional rewards may be given for surviving, exploring, collecting items, completing difficult objectives, or performing well.
+- Display the player's current currency balance clearly in the game interface.
+- Currency must be saved and persist between game sessions.
+- Implement a balanced reward system that encourages gameplay without making progression too fast or too slow.
+- Ensure that purchases deduct the correct amount of currency.
+- Prevent players from purchasing items they cannot afford.
+- Purchased content must remain unlocked permanently.
+
+### 7. Missions, Challenges, and Objectives
+
+Add a mission and challenge system that gives players additional goals beyond simply escaping the maze.
+
+Requirements:
+- Introduce multiple types of missions and challenges.
+- Missions may include escaping within a time limit, surviving without dying, collecting specific items, exploring certain areas, completing objectives, defeating or avoiding enemies, or achieving specific gameplay conditions.
+- Include a variety of mission difficulties.
+- Reward players with in-game currency and other suitable rewards for completing missions.
+- Add daily missions, repeatable challenges, and longer-term objectives where appropriate.
+- Clearly display mission objectives, progress, completion status, and rewards.
+- Make missions encourage different playstyles and exploration rather than repeating the same tasks.
+- Ensure missions are achievable and logically designed.
+
+### 8. Flashlight Skins and Equipment Customization
+
+Add a customization and upgrade system for flashlights and other suitable equipment.
+
+Requirements:
+- Introduce multiple flashlight skins and designs.
+- Allow players to purchase and unlock flashlight skins using in-game currency.
+- Add different flashlight types with distinct characteristics and attributes.
+- Some flashlights may have stronger illumination, longer battery life, lower energy consumption, different beam widths, different ranges, or other unique properties.
+- Add other customizable equipment where appropriate, such as batteries, survival gear, accessories, or useful items that fit the gameplay.
+- Equipment must be purchasable and unlockable through the in-game currency system.
+- Equipment customization should provide meaningful differences without destroying the game's balance.
+- Clearly display each item's attributes and advantages before the player purchases or equips it.
+
+### 9. Character and Equipment Stats and Abilities
+
+Different player skins, characters, flashlights, and equipment may have different abilities, attributes, and performance characteristics.
+
+Examples include:
+
+- Higher or lower stamina.
+- Stronger or weaker flashlight illumination.
+- Longer or shorter flashlight battery duration.
+- Faster or slower stamina regeneration.
+- Higher or lower maximum health.
+- Faster or slower movement speed.
+- Better or worse enemy resistance.
+- Different stealth capabilities.
+- Different survival advantages.
+- Other unique abilities, advantages, disadvantages, or attributes that fit the game's mechanics.
+
+Requirements:
+- Different items and characters must have meaningful attribute differences.
+- Not every skin or equipment item should be identical in functionality if it is designed to have gameplay attributes.
+- Each attribute must be properly balanced with its advantages and disadvantages.
+- Stronger items should have appropriate prices, unlock requirements, or trade-offs.
+- Avoid creating overpowered combinations that make the game trivial.
+- Ensure that gameplay advantages do not eliminate the original challenge or horror experience.
+
+### 10. Attribute Visualization in the Shop and Selection Menus
+
+Create a clear and visually appealing attribute display system for character skins, flashlights, equipment, and other purchasable items.
+
+When browsing or selecting an item, players must be able to see its attributes using visual stat bars or similar graphical indicators.
+
+Examples:
+- Stamina: 90/100, displayed as a strong attribute.
+- Flashlight power: 30/100, displayed as a weak attribute.
+- Movement speed: 75/100.
+- Health: 60/100.
+- Battery duration: 85/100.
+
+Requirements:
+- Display each item's attributes using clear horizontal bars, percentages, numeric values, or other intuitive visual representations.
+- Use a consistent attribute scale, preferably 0–100, wherever appropriate.
+- Make it easy to compare different skins, characters, equipment, and flashlights.
+- Clearly highlight strengths and weaknesses.
+- Display the attributes of the currently selected item alongside other available options.
+- Make the selection interface intuitive, attractive, and easy to understand.
+- Ensure that the attribute indicators accurately reflect the actual gameplay effects of each item.
+
+### 11. Additional Creative Gameplay Features
+
+Think critically about the existing game and introduce other meaningful features that could improve its depth, replayability, progression, immersion, and overall experience.
+
+You may consider adding features such as:
+
+- Unlockable achievements and trophies.
+- Player progression and leveling.
+- Rare and special items.
+- Collectibles hidden throughout the maze.
+- Secret rooms and hidden paths.
+- Different enemy behaviors and AI variations.
+- Random events during gameplay.
+- Special maze objectives.
+- Environmental hazards.
+- Interactive objects.
+- Additional survival mechanics.
+- Reward streaks or bonuses for skilled gameplay.
+- Cosmetic customization for other parts of the game.
+- More meaningful player statistics and personal records.
+- Additional game modes or variations.
+- Other creative systems that fit the existing game's theme and mechanics.
+
+Do not add features randomly. Every new feature must have a clear purpose and should improve the game in a meaningful way.
+
+### 12. Shop Interface, Game Menus, and User Experience
+
+Integrate all new systems into the game's interface in a clean, organized, and visually appealing way.
+
+Requirements:
+- Add a dedicated shop interface.
+- Organize purchasable items into clear categories, such as player skins, flashlights, equipment, maps, enemies, and other unlockable content where applicable.
+- Display item prices, locked/unlocked status, owned items, equipped items, and attribute information.
+- Clearly show the player's current in-game currency balance.
+- Add appropriate purchase confirmation and feedback.
+- Provide clear visual feedback when an item is purchased, unlocked, equipped, or selected.
+- Keep the interface consistent with the game's existing visual style.
+- Avoid clutter and make navigation intuitive.
+
+### 13. Save System and Persistent Progression
+
+All player progression and purchases must be saved properly.
+
+Requirements:
+- Save purchased skins, unlocked maps, equipment, player progression, currency, completed missions, achievements, statistics, and other relevant data.
+- Ensure that data persists between sessions.
+- Prevent purchased items from being lost when restarting the game.
+- Properly handle save data updates after purchases, mission completions, game results, and progression changes.
+- Use the existing save system where possible, extending it carefully rather than unnecessarily replacing it.
+
+### 14. Preserve the Existing Game and Maintain Balance
+
+The original game must remain recognizable and retain its existing core gameplay, mechanics, difficulty, and horror atmosphere.
+
+Do not simplify the game or remove its existing challenges.
+
+All new features must be integrated carefully and must not negatively affect:
+- Existing single-player gameplay.
+- Maze generation and solvability.
+- Enemy mechanics.
+- Trap mechanics.
+- Movement and collision systems.
+- Multiplayer functionality.
+- Game performance.
+- Save data integrity.
+
+Before implementing the new features, inspect the existing codebase and understand how the game currently works.
+
+Reuse the existing architecture and code wherever possible. Avoid unnecessarily rewriting the project or introducing excessive dependencies.
+
+Ensure that all new systems work together correctly, including the shop, currency, missions, skins, equipment, attribute balancing, maps, enemies, music, scoring, and save system.
+
+The goal is to transform the game into a more complete, immersive, rewarding, and replayable experience with meaningful unlockable content, a balanced progression system, customization options, and additional gameplay depth, while preserving the original game and its intended difficulty.
+
+### 15. Hidden Developer Unlock Feature (Creator Cheat Mode)
+
+Add a hidden developer-only feature that allows the game creator to instantly unlock all available content in the game.
+
+- Implement a secret key combination, hidden button, or developer command that can only be activated intentionally.
+- When activated, unlock all player skins, enemy skins, maps, flashlights, equipment, items, upgrades, and all other purchasable or unlockable content.
+- Grant the creator enough in-game currency to purchase anything, or provide an option to unlock and equip everything instantly without spending currency.
+- The feature must not be visible to ordinary players in the normal game menus.
+- It should be easy for the game creator to activate when needed for testing, customization, and development.
+- Make sure the feature does not accidentally activate during normal gameplay.
+- Developer unlocks should not negatively affect the normal player progression, game economy, missions, achievements, or multiplayer balance.
+- Keep this feature hidden and separate from the normal progression system.
+
+### 16. Improve the Overall Game Graphics and Visual Quality
+
+Improve the overall visual quality of the game to make it more immersive, polished, atmospheric, and visually appealing.
+
+- Improve lighting, shadows, colors, textures, environmental details, and visual effects where possible.
+- Enhance the maze walls, floors, corridors, rooms, decorations, and environmental objects.
+- Improve the flashlight lighting, darkness, light falloff, glow, and shadow effects to create a more realistic horror atmosphere.
+- Enhance enemy and player visual designs, animations, and movement effects where possible.
+- Improve UI elements, menus, shop interfaces, buttons, panels, icons, and transitions to make the game look more modern and professional.
+- Add subtle atmospheric effects where appropriate, such as fog, dust, particles, ambient darkness, or other horror-themed visual effects.
+- Avoid excessive effects that make the game difficult to see, reduce gameplay clarity, or negatively affect performance.
+- Optimize graphical improvements so the game remains smooth and responsive on normal computers.
+- Preserve the existing art style and gameplay identity while improving its overall quality. Do not unnecessarily rebuild the entire game or replace its existing core systems.
+
+
+
+
+اینا پرامپتاییه که به یکی دیگه دادم ولی خوب درست نکرد ... حالا خودت اینارو بخون و بساز بازیو
+در نهایت طریقه بازی کردن بطور چند نفره رو بهم یاد بده چطور با گوشی یا سیستم ار طریق اپ یا وب  چند نفره بازی کرد به ساده ترین حالت
